@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>קופי</title>
+<style>
+  /* ===== THEME — הסקיל מחליף את הערכים לפי מערכת העיצוב של תיקיית העבודה.
+     אין מערכת עיצוב → משאירים את ברירת המחדל הנייטרלית. ===== */
+  :root{
+    --bg:/*THEME:bg*/#f6f4ef/*/THEME*/;
+    --card:/*THEME:card*/#ffffff/*/THEME*/;
+    --ink:/*THEME:ink*/#1c1b18/*/THEME*/;
+    --muted:/*THEME:muted*/#6b675e/*/THEME*/;
+    --primary:/*THEME:primary*/#2f5fa8/*/THEME*/;
+    --accent:/*THEME:accent*/#e8eef8/*/THEME*/;
+    --font:/*THEME:font*/-apple-system,"Segoe UI",Arial,"Noto Sans Hebrew",sans-serif/*/THEME*/;
+    --font-head:/*THEME:fontHead*/var(--font)/*/THEME*/;
+    --radius:/*THEME:radius*/12px/*/THEME*/;
+    --border:/*THEME:border*/1px solid #e2ded4/*/THEME*/;
+    --shadow:/*THEME:shadow*/0 1px 2px rgba(0,0,0,.04)/*/THEME*/;
+    /* לא משתנים לעולם — סמנטיים */
+    --missing:#fff3a3; --missing-ink:#5a4a00;
+    --danger:#c8322b; --danger-bg:#fbe9e7;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 var(--font)}
+  .wrap{max-width:1180px;margin:0 auto;padding:28px 20px 60px}
+  h1,h2,h3{font-family:var(--font-head)}
+  header h1{margin:0 0 4px;font-size:30px}
+  header .meta{color:var(--muted);font-size:14px}
+  .voice{margin:16px 0 6px;padding:12px 16px;background:var(--card);border:var(--border);border-radius:var(--radius);box-shadow:var(--shadow);display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+  .voice .pill{background:var(--accent);color:var(--ink);padding:3px 10px;border-radius:999px;font-size:13px}
+  .voice.generic{background:var(--missing);color:var(--missing-ink);font-weight:600}
+  details.brief{margin:8px 0 20px;background:var(--card);border:var(--border);border-radius:var(--radius);padding:8px 16px;box-shadow:var(--shadow)}
+  details.brief summary{cursor:pointer;font-weight:600}
+  details.brief dl{display:grid;grid-template-columns:max-content 1fr;gap:4px 14px;margin:8px 0 4px;font-size:15px}
+  details.brief dt{color:var(--muted)}
+  .note{margin:0 0 20px;padding:12px 16px;border-right:5px solid var(--primary);background:var(--card);border-radius:var(--radius);font-size:15px}
+  .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;align-items:start}
+  @media (max-width:900px){.cards{grid-template-columns:1fr}}
+  .card{background:var(--card);border:var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px 18px;position:relative}
+  .card.chosen{outline:3px solid var(--primary)}
+  .card .top{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap}
+  .tag{display:inline-block;padding:3px 10px;border-radius:999px;font-size:12px;font-weight:600;background:var(--accent);color:var(--ink)}
+  .tag.best{background:var(--primary);color:#fff}
+  .best-note{font-size:13px;color:var(--muted);margin:-4px 0 10px}
+  .flag{background:var(--danger-bg);color:var(--danger);border-right:5px solid var(--danger);padding:8px 12px;border-radius:6px;font-weight:700;font-size:14px;margin-bottom:10px}
+  .block{margin:10px 0}
+  .block .label{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--muted);margin-bottom:3px}
+  .block .txt{white-space:pre-wrap;padding:8px 10px;border-radius:8px;background:var(--bg);outline:none;min-height:1.6em}
+  .block .txt:focus{box-shadow:0 0 0 2px var(--primary) inset}
+  .block.hook .txt{font-weight:700;font-size:17px}
+  mark.missing{background:var(--missing);color:var(--missing-ink);padding:0 4px;border-radius:4px;font-weight:600}
+  button{font:inherit;font-size:13px;padding:6px 12px;border:var(--border);background:var(--card);border-radius:8px;cursor:pointer;color:var(--ink)}
+  button.primary{background:var(--primary);color:#fff;border-color:var(--primary)}
+  button.small{font-size:12px;padding:2px 8px}
+  .actions{display:flex;gap:8px;align-items:center;margin-top:12px;flex-wrap:wrap}
+  .actions label{font-size:14px;display:flex;align-items:center;gap:6px;cursor:pointer}
+  .hide-labels .block .label span:first-child{visibility:hidden}
+  .image{margin-top:14px;padding-top:12px;border-top:var(--border)}
+  .image img{max-width:100%;border-radius:8px;display:block;margin-bottom:8px}
+  .image .prompt{font-size:12px;color:var(--muted);white-space:pre-wrap;background:var(--bg);padding:8px 10px;border-radius:8px;direction:ltr;text-align:left}
+  .image .cost{font-size:13px;margin-top:6px}
+  .image .none{font-size:14px;color:var(--muted);margin-bottom:6px}
+  section.body{margin-top:30px}
+  section.body h2{font-size:22px;margin:0 0 4px}
+  section.body .why{color:var(--muted);font-size:14px;margin:0 0 12px}
+  section.body .block{background:var(--card);border:var(--border);border-radius:var(--radius);padding:12px 16px}
+  details.panel{margin-top:30px;background:var(--card);border:var(--border);border-radius:var(--radius);padding:10px 16px}
+  details.panel summary{cursor:pointer;font-weight:600}
+  .panel .row{display:flex;flex-wrap:wrap;gap:14px;align-items:center;padding:10px 0;font-size:14px}
+  footer{margin-top:26px;color:var(--muted);font-size:13px}
+  @media print{ body{background:#fff} button,details.panel,input[type=checkbox]{display:none!important} .card{break-inside:avoid} }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1 id="title"></h1>
+    <div class="meta" id="meta"></div>
+  </header>
+
+  <div class="voice" id="voice"></div>
+  <details class="brief"><summary>הבריף</summary><dl id="brief"></dl></details>
+  <div id="notes"></div>
+
+  <div class="cards" id="cards"></div>
+
+  <section class="body" id="fullbody" hidden></section>
+
+  <details class="panel">
+    <summary>הגדרות</summary>
+    <div class="row">
+      <label><input type="checkbox" id="showLabels" checked> הצג תוויות בלוקים</label>
+      <button id="resetEdits">אפס עריכות</button>
+      <button onclick="window.print()">הדפסה</button>
+      <span id="voiceLine" style="color:var(--muted)"></span>
+      <span id="designLine" style="color:var(--muted)"></span>
+    </div>
+  </details>
+
+  <footer>אין נתון בקובץ העסק - אין נתון בקופי. מה שחסר מסומן בצהוב.</footer>
+</div>
+
+<script>
+/* ===== DATA — מוזרק ע"י הסקיל. זה הפלט, לא המקור. ===== */
+const DATA = /*DATA*/{}/*/DATA*/;
+/* ===================================================== */
+
+const KEY = "marketing-copy:" + (DATA.topic||"") + ":" + (DATA.format||"");
+let state = {edits:{}, chosen:null, showLabels:true};
+try{ const s=localStorage.getItem(KEY); if(s) state=Object.assign(state, JSON.parse(s)); }catch(e){}
+function save(){ try{ localStorage.setItem(KEY, JSON.stringify(state)); }catch(e){} }
+function esc(s){ return String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
+function mark(s){ return esc(s).replace(/\[חסר:([^\]]*)\]/g,'<mark class="missing">[חסר:$1]</mark>'); }
+const FORMAT_NAME={post:"פוסט לרשתות",email:"מייל / ניוזלטר",ad:"מודעה ממומנת",landing:"בלוקי דף נחיתה"};
+
+async function copyText(t, btn){
+  let ok=false;
+  try{ await navigator.clipboard.writeText(t); ok=true; }catch(e){
+    try{ const ta=document.createElement("textarea"); ta.value=t; document.body.appendChild(ta); ta.select(); ok=document.execCommand("copy"); ta.remove(); }catch(e2){}
+  }
+  if(btn){ const o=btn.textContent; btn.textContent= ok?"הועתק ✓":"לא הצליח"; setTimeout(()=>btn.textContent=o,1500); }
+}
+function textOf(vid, i){ const k=vid+":"+i; return state.edits[k] ?? DATA.variations.find(v=>v.id===vid).blocks[i].text; }
+function fullOf(v){ return v.blocks.map((b,i)=>textOf(v.id,i)).join("\n\n"); }
+
+/* ראש */
+document.getElementById("title").textContent = (FORMAT_NAME[DATA.format]||DATA.format) + " · " + (DATA.topic||"");
+document.getElementById("meta").textContent = "נבנה " + (DATA.createdAt||"");
+(function(){
+  const v=DATA.voice||{}, el=document.getElementById("voice");
+  if(v.calibrated){ el.innerHTML='<span class="pill">בקול שלך</span> נכתב לפי voice.md, כויל מ-'+esc(v.samples)+' דוגמאות'+(v.surface?' · משטח: '+esc(v.surface):''); }
+  else { el.classList.add("generic"); el.textContent="נכתב בקול גנרי - לא כויל קול. תן 3 טקסטים שכתבת ואבנה מחדש."; }
+  const b=DATA.brief||{}; document.getElementById("brief").innerHTML =
+    [["מה מקדמים",b.promoting],["למי",b.audience],["הפעולה",b.action],["מועד / מגבלה",b.deadline]].map(([k,val])=>"<dt>"+k+"</dt><dd>"+esc(val||"—")+"</dd>").join("");
+  document.getElementById("notes").innerHTML=(DATA.notes||[]).map(n=>'<div class="note">'+esc(n)+'</div>').join("");
+  document.getElementById("voiceLine").textContent = v.calibrated? "voice.md · "+v.samples+" דוגמאות" : "לא כויל קול";
+  const d=DATA.design||{}; document.getElementById("designLine").textContent = d.source? "הלוח מעוצב לפי "+d.source : "לא נמצאה מערכת עיצוב - ברירת מחדל נייטרלית";
+})();
+
+/* כרטיסים */
+function render(){
+  const wrap=document.getElementById("cards");
+  wrap.innerHTML=(DATA.variations||[]).map(v=>{
+    const chosen=state.chosen===v.id;
+    let h='<div class="card'+(chosen?" chosen":"")+'" data-id="'+esc(v.id)+'">';
+    h+='<div class="top"><span class="tag">'+esc(v.angle)+'</span>'+(v.closestToVoice?'<span class="tag best">הכי קרוב לקול שלך</span>':'')+'</div>';
+    if(v.closestToVoice&&v.voiceNote) h+='<div class="best-note">'+esc(v.voiceNote)+'</div>';
+    if((v.flags||[]).includes("regulatory")) h+='<div class="flag">⚠️ טעון בדיקה רגולטורית</div>';
+    v.blocks.forEach((b,i)=>{
+      const isHook=/הוק|כותרת|שורת נושא/.test(b.label);
+      h+='<div class="block'+(isHook?" hook":"")+'"><div class="label"><span>'+esc(b.label)+'</span><button class="small copyBlock" data-v="'+esc(v.id)+'" data-i="'+i+'">העתק</button></div>'
+        +'<div class="txt" contenteditable="true" data-v="'+esc(v.id)+'" data-i="'+i+'">'+mark(textOf(v.id,i))+'</div></div>';
+    });
+    h+='<div class="actions"><button class="primary copyAll" data-v="'+esc(v.id)+'">העתק הכל</button>'
+      +'<label><input type="radio" name="chosen" value="'+esc(v.id)+'" '+(chosen?"checked":"")+'> זו שבחרתי</label></div>';
+    const img=DATA.image;
+    if(img && img.forVariation===v.id){
+      h+='<div class="image">';
+      if(img.dataUri){ h+='<img src="'+img.dataUri+'" alt="">'; }
+      else h+='<div class="none">אין חיבור OpenRouter - הפרומפט מוכן להדבקה בכל כלי תמונות.</div>';
+      h+='<div class="prompt">'+esc(img.prompt||"")+'</div><div class="actions"><button class="small copyPrompt">העתק פרומפט</button>'
+        +(img.cost!=null?'<span class="cost">התמונה עלתה $'+Number(img.cost).toFixed(2)+'</span>':'')+'</div></div>';
+    }
+    return h+'</div>';
+  }).join("");
+  wrap.querySelectorAll(".txt").forEach(el=>el.addEventListener("input",e=>{ state.edits[e.target.dataset.v+":"+e.target.dataset.i]=e.target.innerText; save(); }));
+  wrap.querySelectorAll(".copyBlock").forEach(b=>b.addEventListener("click",e=>copyText(textOf(e.target.dataset.v,+e.target.dataset.i),e.target)));
+  wrap.querySelectorAll(".copyAll").forEach(b=>b.addEventListener("click",e=>copyText(fullOf(DATA.variations.find(v=>v.id===e.target.dataset.v)),e.target)));
+  wrap.querySelectorAll(".copyPrompt").forEach(b=>b.addEventListener("click",e=>copyText(DATA.image.prompt||"",e.target)));
+  wrap.querySelectorAll('input[name=chosen]').forEach(r=>r.addEventListener("change",e=>{ state.chosen=e.target.value; save(); render(); }));
+  document.body.classList.toggle("hide-labels", state.showLabels===false);
+}
+
+/* דף נחיתה — הגוף המלא */
+(function(){
+  if(!DATA.fullBody) return;
+  const s=document.getElementById("fullbody"); s.hidden=false;
+  let h='<h2>הגוף המלא - לציר '+esc(DATA.fullBodyFor||"")+'</h2><p class="why">שלוש וריאציות של דף שלם הן בזבוז, ולכן הגוף נכתב לציר אחד. בחרת ציר אחר? אכתוב את הגוף מחדש אליו.</p>';
+  h+='<div class="actions"><button class="primary" id="copyBody">העתק את הדף כולו</button></div>';
+  DATA.fullBody.forEach((b,i)=>{ h+='<div class="block"><div class="label"><span>'+esc(b.label)+'</span><button class="small copySec" data-i="'+i+'">העתק סקשן</button></div><div class="txt" contenteditable="true" data-sec="'+i+'">'+mark(state.edits["body:"+i]??b.text)+'</div></div>'; });
+  s.innerHTML=h;
+  s.querySelectorAll(".txt").forEach(el=>el.addEventListener("input",e=>{ state.edits["body:"+e.target.dataset.sec]=e.target.innerText; save(); }));
+  s.querySelectorAll(".copySec").forEach(b=>b.addEventListener("click",e=>copyText(state.edits["body:"+e.target.dataset.i]??DATA.fullBody[+e.target.dataset.i].text,e.target)));
+  document.getElementById("copyBody").addEventListener("click",e=>copyText(DATA.fullBody.map((b,i)=>state.edits["body:"+i]??b.text).join("\n\n"),e.target));
+})();
+
+/* פאנל */
+(function(){
+  const sl=document.getElementById("showLabels"); sl.checked=state.showLabels!==false;
+  sl.addEventListener("change",e=>{ state.showLabels=e.target.checked; save(); render(); });
+  document.getElementById("resetEdits").addEventListener("click",()=>{ state.edits={}; save(); render(); });
+})();
+render();
+</script>
+</body>
+</html>
